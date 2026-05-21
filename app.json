@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "敲敲乐",
+    "name": "TapTap Joy",
     "slug": "taptap-joy",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -30,19 +30,7 @@
     },
     "plugins": [
       "expo-font",
-      "expo-localization",
-      [
-        "react-native-iap",
-        {
-          "ios": {
-            "appleId": "YOUR_APPLE_ID",
-            "bundleIdentifier": "cn.indieleague.taptapjoy"
-          },
-          "android": {
-            "packageName": "com.woodenfish.taptapjoy"
-          }
-        }
-      ]
+      "expo-localization"
     ]
   }
 }
