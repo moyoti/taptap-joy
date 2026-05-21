@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppStore } from '@/store/useAppStore';
 import { THEME_COLORS, INITIAL_ITEMS, ACHIEVEMENTS } from '@/constants';
+import { AnimatedCounter } from '@/components/AnimatedCounter';
 
 interface StatsScreenProps {
   navigation: any;
@@ -86,7 +87,13 @@ export const StatsScreen: React.FC<StatsScreenProps> = ({ navigation }) => {
                 {stat.label}
               </Text>
               <Text style={[styles.statValue, { color: stat.color }]}>
-                {stat.value}
+                {stat.icon === 'heart' ? stat.value : (
+                  <AnimatedCounter 
+                    value={parseInt(stat.value) || 0} 
+                    duration={1500}
+                    style={{ color: stat.color }}
+                  />
+                )}
               </Text>
               <Text style={[styles.statSubValue, { color: theme.text, opacity: 0.5 }]}>
                 {stat.subValue}
