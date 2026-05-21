@@ -1,20 +1,19 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { I18nextProvider } from 'react-i18next';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import i18n from './src/i18n';
+import { AppNavigator } from './src/navigation/AppNavigator';
+import { OnboardingGuide } from './src/components/OnboardingGuide';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaProvider>
+      <I18nextProvider i18n={i18n}>
+        <OnboardingGuide />
+        <AppNavigator />
+        <StatusBar style="auto" />
+      </I18nextProvider>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

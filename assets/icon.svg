@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F5E6D3"/>
+      <stop offset="100%" stop-color="#E8D5B7"/>
+    </linearGradient>
+    <linearGradient id="fishGrad" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#D4A574"/>
+      <stop offset="40%" stop-color="#C49A6C"/>
+      <stop offset="100%" stop-color="#8B6F47"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FF8C42"/>
+      <stop offset="100%" stop-color="#E07030"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#8B6F47" flood-opacity="0.25"/>
+    </filter>
+    <filter id="innerShadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#6B4F2F" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="224" fill="url(#bgGrad)"/>
+  
+  <!-- Wooden fish body -->
+  <g filter="url(#shadow)">
+    <ellipse cx="512" cy="440" rx="260" ry="220" fill="url(#fishGrad)"/>
+    
+    <!-- Fish opening line -->
+    <rect x="350" y="430" width="324" height="14" rx="7" fill="#6B4F2F" opacity="0.6"/>
+    
+    <!-- Top decoration -->
+    <ellipse cx="512" cy="250" rx="60" ry="20" fill="#FF8C42" opacity="0.3"/>
+    
+    <!-- Side wings -->
+    <path d="M252 400 Q240 440 252 480" fill="none" stroke="#8B6F47" stroke-width="8" stroke-linecap="round" opacity="0.5"/>
+    <path d="M772 400 Q784 440 772 480" fill="none" stroke="#8B6F47" stroke-width="8" stroke-linecap="round" opacity="0.5"/>
+  </g>
+  
+  <!-- Accent dot -->
+  <circle cx="512" cy="440" r="24" fill="url(#accentGrad)"/>
+  
+  <!-- Zen circle background -->
+  <circle cx="512" cy="440" r="80" fill="none" stroke="#F5E6D3" stroke-width="3" opacity="0.4"/>
+</svg>
