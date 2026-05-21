@@ -30,7 +30,19 @@
     },
     "plugins": [
       "expo-font",
-      "expo-localization"
+      "expo-localization",
+      [
+        "react-native-iap",
+        {
+          "ios": {
+            "appleId": "YOUR_APPLE_ID",
+            "bundleIdentifier": "cn.indieleague.taptapjoy"
+          },
+          "android": {
+            "packageName": "com.woodenfish.taptapjoy"
+          }
+        }
+      ]
     ]
   }
 }

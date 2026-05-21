@@ -29,6 +29,17 @@ const executeHaptic = (style: HapticStyle) => {
 interface AppStore extends AppState {
   hasCompletedOnboarding: boolean;
   setOnboardingComplete: () => void;
+  // IAP
+  iapState: {
+    isConnected: boolean;
+    isLoading: boolean;
+    products: any[];
+    error: string | null;
+  };
+  initializeIAP: () => Promise<void>;
+  purchaseItemWithIAP: (productId: string) => Promise<void>;
+  restorePurchases: () => Promise<void>;
+  clearIAPError: () => void;
   tap: (action?: 'tap' | 'release') => void;
   resetCombo: () => void;
   selectItem: (item: TapItem) => void;

@@ -84,3 +84,12 @@ export type RootStackParamList = {
   Achievements: undefined;
   Settings: undefined;
 };
+
+// IAP 类型
+export interface IAPState {
+  isConnected: boolean;
+  isLoading: boolean;
+  products: any[];
+  purchases: any[];
+  error: string | null;
+}
