@@ -94,6 +94,17 @@ const resources = {
       'onboarding.shop.title': '物品商店',
       'onboarding.shop.description': '探索 15+ 种敲击物品，从传统乐器到现代办公用品，总有一款适合你',
 
+      // IAP 内购文本
+      'iap.restore_purchases': '恢复购买',
+      'iap.restore_description': '如果您之前购买过物品，点击下面的按钮可以恢复所有购买记录。不会重复收费。',
+      'iap.restore_now': '恢复购买',
+      'iap.restore_success': '成功恢复 {{count}} 个物品！',
+      'iap.restore_no_purchases': '未找到购买记录',
+      'iap.restore_error': '恢复失败，请稍后重试',
+      'iap.restored_items': '已恢复的物品',
+      'iap.purchase_error': '购买失败：{{message}}',
+      'iap.already_owned': '已拥有此物品',
+
       'share.default': '我在赛博敲击已经敲了 {{count}} 次，快来一起解压！',
       'share.achievement': '我解锁了成就「{{name}}」！',
       'share.milestone': '恭喜！累计敲击{{count}}次！',
