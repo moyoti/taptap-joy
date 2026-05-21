@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import { View, StyleSheet, Animated } from 'react-native';
 import { useTranslation } from "react-i18next";
 import { Ionicons } from '@expo/vector-icons';
@@ -6,6 +6,7 @@ import * as Haptics from 'expo-haptics';
 import { useAppStore } from '@/store/useAppStore';
 import { THEME_COLORS } from '@/constants';
 import { HapticStyle } from '@/types';
+import { ParticleEffect } from '@/components/ParticleEffect';
 
 const executeHaptic = (style: HapticStyle) => {
   switch (style) {
@@ -21,13 +22,17 @@ interface TapButtonProps { size?: number }
 
 export const TapButton: React.FC<TapButtonProps> = ({ size = 220 }) => {
   const { t } = useTranslation();
-  const { currentItem, tap, settings } = useAppStore();
+  const { currentItem, tap, settings, combo } = useAppStore();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const ringAnim = useRef(new Animated.Value(0)).current;
   const holding = useRef(false);
   const longTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const holdHapticTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const pressAt = useRef(0);
+  
+  // 粒子效果状态
+  const [particleTrigger, setParticleTrigger] = useState(0);
+  const [particlePosition, setParticlePosition] = useState({ x: size / 2, y: size / 2 });
 
   const playHoldHaptics = useCallback(() => {
     // Clear previous hold haptics
@@ -71,6 +76,11 @@ export const TapButton: React.FC<TapButtonProps> = ({ size = 220 }) => {
 
   const onDown = () => {
     pressAt.current = Date.now(); holding.current = true;
+    
+    // 触发粒子效果
+    setParticlePosition({ x: size / 2, y: size / 2 });
+    setParticleTrigger(prev => prev + 1);
+    
     const m = currentItem.interactionMode;
     if (m !== 'tap' && longTimer.current == null) {
       longTimer.current = setTimeout(() => { if (holding.current) startRing(); }, currentItem.holdDuration);
@@ -121,6 +131,15 @@ export const TapButton: React.FC<TapButtonProps> = ({ size = 220 }) => {
           </Animated.Text>
         )}
       </Animated.View>
+      
+      {/* 粒子效果 */}
+      <ParticleEffect
+        trigger={particleTrigger}
+        x={particlePosition.x}
+        y={particlePosition.y}
+        type={combo > 50 ? 'combo' : 'tap'}
+        onComplete={() => {}}
+      />
     </View>
   );
 };
