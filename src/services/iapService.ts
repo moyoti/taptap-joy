@@ -29,7 +29,7 @@ class IAPService {
   }
 
   /**
-   * Get all available products
+   * Get all available products (Non-Consumable only)
    */
   async getProducts(): Promise<IAP.Product[]> {
     try {
@@ -47,27 +47,7 @@ class IAPService {
   }
 
   /**
-   * Get subscriptions
-   */
-  async getSubscriptions(): Promise<IAP.Subscription[]> {
-    try {
-      if (!this.isInitialized) {
-        await this.initialize();
-      }
-
-      const subscriptions = await IAP.getSubscriptions({
-        skus: [IAP_PRODUCT_IDS.PREMIUM_MONTHLY, IAP_PRODUCT_IDS.PREMIUM_YEARLY],
-      });
-      console.log('[IAP] Subscriptions loaded:', subscriptions.length);
-      return subscriptions;
-    } catch (error) {
-      console.error('[IAP] Error loading subscriptions:', error);
-      return [];
-    }
-  }
-
-  /**
-   * Purchase a product
+   * Purchase a product (Non-Consumable)
    */
   async purchaseProduct(productId: string): Promise<IAP.ProductPurchase> {
     try {
@@ -79,23 +59,6 @@ class IAPService {
       return purchase;
     } catch (error: any) {
       console.error('[IAP] Purchase error:', error.code, error.message);
-      throw this.mapPurchaseError(error);
-    }
-  }
-
-  /**
-   * Purchase a subscription
-   */
-  async purchaseSubscription(productId: string): Promise<IAP.ProductPurchase> {
-    try {
-      const purchase = await IAP.requestSubscription({
-        sku: productId,
-      });
-
-      console.log('[IAP] Subscription successful:', productId);
-      return purchase;
-    } catch (error: any) {
-      console.error('[IAP] Subscription error:', error.code, error.message);
       throw this.mapPurchaseError(error);
     }
   }
