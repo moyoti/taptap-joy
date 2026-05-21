@@ -6,6 +6,7 @@ import {
   FlatList,
   Pressable,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +14,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAppStore } from '@/store/useAppStore';
 import { THEME_COLORS, INITIAL_ITEMS } from '@/constants';
 import { TapItem } from '@/types';
+import { iapService } from '@/services/iapService';
+import { PRODUCT_CONFIGS } from '@/constants/iapProducts';
+import { RestorePurchasesModal } from '@/components/RestorePurchasesModal';
 
 interface ShopScreenProps {
   navigation: any;
@@ -22,6 +26,8 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({ navigation }) => {
   const { t } = useTranslation();
   const { progress, purchaseItem, selectItem, settings } = useAppStore();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [isPurchasing, setIsPurchasing] = useState(false);
+  const [restoreModalVisible, setRestoreModalVisible] = useState(false);
   const theme = THEME_COLORS[settings.theme];
 
   const categories = [
@@ -38,7 +44,7 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({ navigation }) => {
       ? INITIAL_ITEMS
       : INITIAL_ITEMS.filter((item) => item.category === selectedCategory);
 
-  const handlePurchase = (item: TapItem) => {
+  const handlePurchase = async (item: TapItem) => {
     if (item.isUnlocked) {
       selectItem(item);
       Alert.alert(t('shop.owned'), `${t(item.name)} ${t('shop.owned')}`);
@@ -46,17 +52,39 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({ navigation }) => {
     }
 
     if (item.isPremium && item.price) {
+      // 找到对应的产品配置
+      const product = PRODUCT_CONFIGS.find(config => config.items.includes(item.id));
+      
+      if (!product) {
+        Alert.alert('Error', 'Product configuration not found');
+        return;
+      }
+
       Alert.alert(
-        t('shop.purchase_confirm', { name: item.name }),
-        `$${item.price}`,
+        t('shop.purchase_confirm', { name: t(item.name) }),
+        `$${product.price}`,
         [
           { text: t('common.cancel'), style: 'cancel' },
           {
             text: t('common.purchase'),
-            onPress: () => {
-              purchaseItem(item.id);
-              Alert.alert(t('shop.purchase_success', { name: item.name }));
-              selectItem(item);
+            onPress: async () => {
+              setIsPurchasing(true);
+              try {
+                // 调用 IAP 服务购买
+                await iapService.purchaseProduct(product.id);
+                // 购买成功，解锁物品
+                purchaseItem(item.id);
+                Alert.alert(t('shop.purchase_success', { name: t(item.name) }));
+                selectItem(item);
+              } catch (error: any) {
+                // 处理错误
+                Alert.alert(
+                  t('shop.purchase_error'),
+                  error.message || t('iap.purchase_error', { message: '' })
+                );
+              } finally {
+                setIsPurchasing(false);
+              }
             },
           },
         ]
@@ -121,7 +149,9 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({ navigation }) => {
           <Ionicons name="arrow-back" size={24} color={theme.text} />
         </Pressable>
         <Text style={[styles.title, { color: theme.text }]}>{t('shop.title')}</Text>
-        <View style={styles.placeholder} />
+        <Pressable onPress={() => setRestoreModalVisible(true)}>
+          <Ionicons name="refresh-outline" size={24} color={theme.text} />
+        </Pressable>
       </View>
 
       <FlatList
@@ -159,7 +189,24 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({ navigation }) => {
         renderItem={renderItem}
         contentContainerStyle={styles.itemList}
         columnWrapperStyle={styles.itemRow}
+        scrollEnabled={!isPurchasing}
       />
+      
+      {/* 恢复购买 Modal */}
+      <RestorePurchasesModal
+        visible={restoreModalVisible}
+        onClose={() => setRestoreModalVisible(false)}
+      />
+      
+      {/* 购买加载遮罩 */}
+      {isPurchasing && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color={theme.primary} />
+          <Text style={[styles.loadingText, { color: theme.text }]}>
+            {t('shop.processing')}
+          </Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -254,5 +301,17 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 12,
     fontWeight: '600',
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+  },
+  loadingText: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginTop: 8,
   },
 });

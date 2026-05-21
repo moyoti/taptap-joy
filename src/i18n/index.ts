@@ -104,6 +104,8 @@ const resources = {
       'iap.restored_items': '已恢复的物品',
       'iap.purchase_error': '购买失败：{{message}}',
       'iap.already_owned': '已拥有此物品',
+      'shop.processing': '处理中...',
+      'shop.purchase_error': '购买失败',
 
       'share.default': '我在赛博敲击已经敲了 {{count}} 次，快来一起解压！',
       'share.achievement': '我解锁了成就「{{name}}」！',
